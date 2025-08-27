@@ -46,7 +46,24 @@ RUN apt-get update && \
         xfce4-pulseaudio-plugin \
         xorgxrdp \
         xrdp \
-        xubuntu-icon-theme && \
+        xubuntu-icon-theme \
+        fonts-noto \
+        fonts-noto-cjk \
+        ibus-mozc \
+        iproute2 \
+        dnsutils \
+        traceroute \
+        htop \
+        less \
+        openssh-client \
+        rsync \
+        curl \
+        wget \
+        openssl \
+        python3 \
+        python-is-python3 \
+        perl \
+        libreoffice && \
     add-apt-repository -y ppa:mozillateam/ppa && \
     echo "Package: *"  > /etc/apt/preferences.d/mozilla-firefox && \
     echo "Pin: release o=LP-PPA-mozillateam" >> /etc/apt/preferences.d/mozilla-firefox && \
@@ -55,12 +72,17 @@ RUN apt-get update && \
     DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends firefox && \
     rm -rf /var/lib/apt/lists/* && \
     deluser --remove-home ubuntu && \
-    locale-gen en_US.UTF-8
+    locale-gen ja_JP.UTF-8
 
 COPY --from=builder /tmp/install /
 RUN sed -i 's|^Exec=.*|Exec=/usr/bin/pulseaudio|' /etc/xdg/autostart/pulseaudio-xrdp.desktop
 
-ENV LANG=en_US.UTF-8
+ENV LANG=ja_JP.UTF-8 \
+    LANGUAGE=ja_JP:ja \
+    LC_ALL=ja_JP.UTF-8 \
+    GTK_IM_MODULE=ibus \
+    QT_IM_MODULE=ibus \
+    XMODIFIERS=@im=ibus
 COPY entrypoint.sh /usr/bin/entrypoint
 EXPOSE 3389/tcp
 ENTRYPOINT ["/usr/bin/entrypoint"]
